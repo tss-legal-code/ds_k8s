@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: apps
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nest-api
+  namespace: apps
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nest-api
+  template:
+    metadata:
+      labels:
+        app: nest-api
+    spec:
+      containers:
+        - name: nest-api
+          image: ds-nest-api:0.0.1  # 👈 Matches your current package.json version!
+          imagePullPolicy: Never    # 👈 Tells K3s to prioritize your local sideloaded cache
+          ports:
+            - containerPort: 5554
+          env:
+            - name: PORT
+              value: "5554"
+            - name: DB_HOST
+              value: "postgres-service.database.svc.cluster.local" # 👈 Internal cluster network routing
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_USER
+              value: "postgres"
+            - name: DB_PASSWORD
+              value: "postgres"
+            - name: DB_NAME
+              value: "playground"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nest-api-service
+  namespace: apps
+spec:
+  selector:
+    app: nest-api
+  ports:
+    - protocol: TCP
+      port: 5554       
+      targetPort: 5554
