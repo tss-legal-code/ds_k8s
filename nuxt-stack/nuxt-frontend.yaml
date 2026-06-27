@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vue-frontend
+  namespace: apps
+  labels:
+    app: vue-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vue-frontend
+  template:
+    metadata:
+      labels:
+        app: vue-frontend
+    spec:
+      containers:
+        - name: vue-web
+          # Targets version extracted from your vue package.json script
+          image: ds-vue-frontend:1.0.0
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 5556
+          env:
+            - name: NODE_ENV
+              value: "production"
+          resources:
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vue-frontend-service
+  namespace: apps
+spec:
+  selector:
+    app: vue-frontend
+  ports:
+    - protocol: TCP
+      port: 5556        # Internal service grid routing network port
+      targetPort: 5556  # The container port Nitro listens to
+  type: ClusterIP
