@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: nest-api
-          image: ds-nest-api:0.0.1  # 👈 Matches your current package.json version!
+          image: ds-nest-api:1.0.1  # 👈 Matches your current package.json version!
           imagePullPolicy: Never    # 👈 Tells K3s to prioritize your local sideloaded cache
           ports:
             - containerPort: 5554
