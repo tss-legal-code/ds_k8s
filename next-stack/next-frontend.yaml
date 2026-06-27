@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: react-frontend
+  namespace: apps
+  labels:
+    app: react-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: react-frontend
+  template:
+    metadata:
+      labels:
+        app: react-frontend
+    spec:
+      containers:
+        - name: react-web
+          # The tag must match your package.json version handled by your reload_k8s.sh script
+          image: ds-react-frontend:0.1.0
+          # Tell K3d to look ONLY inside its local sideload pockets for the image
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 5555
+          env:
+            - name: NODE_ENV
+              value: "production"
+          resources:
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: react-frontend-service
+  namespace: apps
+spec:
+  selector:
+    app: react-frontend
+  ports:
+    - protocol: TCP
+      port: 5555        # The port open internally inside the cluster grid
+      targetPort: 5555  # The port standalone Node process listens to
+  type: ClusterIP
