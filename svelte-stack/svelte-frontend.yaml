@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: svelte-frontend
+  namespace: apps
+  labels:
+    app: svelte-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: svelte-frontend
+  template:
+    metadata:
+      labels:
+        app: svelte-frontend
+    spec:
+      containers:
+        - name: svelte-web
+          image: ds-svelte-frontend:0.0.1
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 5557
+          env:
+            - name: NODE_ENV
+              value: "production"
+          resources:
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: svelte-frontend-service
+  namespace: apps
+spec:
+  selector:
+    app: svelte-frontend
+  ports:
+    - protocol: TCP
+      port: 5557        # Cluster internal communication grid port
+      targetPort: 5557  # Target port the Svelte Node server is listening on
+  type: ClusterIP
