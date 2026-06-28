@@ -24,6 +24,10 @@ spec:
           env:
             - name: NODE_ENV
               value: "production"
+            - name: HOST
+              value: "0.0.0.0"      # Tell Node to bind to all network interfaces inside the pod
+            - name: PORT
+              value: "5557"         # Explicitly force SvelteKit to listen on containerPort 5557
           resources:
             limits:
               memory: "256Mi"
