@@ -40,7 +40,8 @@ spec:
               name: http
           volumeMounts:
             - name: realm-config-volume
-              mountPath: /opt/keycloak/data/import
+              mountPath: /opt/keycloak/data/import/dev-realm.json
+              subPath: dev-realm.json
           resources:
             limits:
               memory: "768Mi"
