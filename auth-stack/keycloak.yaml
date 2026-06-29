@@ -22,8 +22,8 @@ spec:
     spec:
       containers:
         - name: keycloak
-          image: quay.io/keycloak/keycloak:26.1 # Production-ready stable tag
-          args: ["start-dev", "--import-realm"] # Puts Keycloak into HTTP development mode for local learning
+          image: quay.io/keycloak/keycloak:26.1
+          args: ["start-dev", "--import-realm"]
           env:
             - name: KEYCLOAK_ADMIN
               value: "admin"
@@ -52,7 +52,7 @@ spec:
       volumes:
         - name: realm-config-volume
           configMap:
-            name: keycloak-realm-import # Points directly to your ConfigMap
+            name: keycloak-realm-import
 ---
 apiVersion: v1
 kind: Service
