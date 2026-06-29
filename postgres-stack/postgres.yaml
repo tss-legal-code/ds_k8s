@@ -103,3 +103,47 @@ spec:
     - protocol: TCP
       port: 5050
       targetPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-cache
+  namespace: database
+  labels:
+    app: redis-cache
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis-cache
+  template:
+    metadata:
+      labels:
+        app: redis-cache
+    spec:
+      containers:
+        - name: redis
+          image: redis:7-alpine
+          ports:
+            - containerPort: 6379
+              name: redis
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "200m"
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-service
+  namespace: database
+spec:
+  selector:
+    app: redis-cache
+  ports:
+    - protocol: TCP
+      port: 6379
+      targetPort: 6379
