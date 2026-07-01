@@ -38,9 +38,9 @@ spec:
             - name: DB_NAME
               value: "playground"
             - name: REDIS_HOST
-              value: redis-service.cache
+              value: "redis-service.cache.svc.cluster.local"
             - name: REDIS_PORT
-              value: 6379
+              value: "6379"
 ---
 apiVersion: v1
 kind: Service
