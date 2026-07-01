@@ -37,6 +37,10 @@ spec:
               value: "postgres"
             - name: DB_NAME
               value: "playground"
+            - name: REDIS_HOST
+              value: redis-service.cache
+            - name: REDIS_PORT
+              value: 6379
 ---
 apiVersion: v1
 kind: Service
